@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="test.title">تست تأیید تماس بی‌پاسخ</title>
+    <style>
+        :root {
+            --primary-green: #22c55e;
+            --primary-blue: #3b82f6;
+            --secondary-blue: #2563eb;
+            --dark-gray: #1a202c;
+            --light-gray: #f8fafc;
+            --border-light: #e2e8f0;
+            --border-green: #bbf7d0;
+            --green-800: #166534;
+            --gray-100: #f1f5f9;
+            --gray-700: #334155;
+
+            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius-lg: 1rem;
+            --radius-md: 0.5rem;
+            --spacing-lg: 1.5rem;
+            --spacing-md: 1rem;
+            --spacing-sm: 0.5rem;
+        }
+
+        [dir="ltr"] {
+            --font-family-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        [dir="rtl"] {
+            --font-family-main: "Vazirmatn", "Vazir", Tahoma, Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family-main);
+            background: var(--color-bg-soft);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: var(--dark-gray);
+        }
+
+        .main-header {
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--dark-gray);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .language-dropdown {
+            position: relative;
+        }
+
+        .lang-toggle {
+            background: var(--light-gray);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .lang-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            width: 120px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .language-dropdown.active .lang-dropdown-menu {
+            display: block;
+        }
+
+        .lang-option {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            width: 100%;
+            text-align: right;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .lang-option:hover {
+            background: var(--light-gray);
+        }
+
+        .lang-option.active {
+            background: var(--color-bg-soft);
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--color-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .test-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        input[type="tel"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: center;
+            border: none;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background: var(--color-bg-soft);
+            color: var(--dark-gray);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        .btn-outline:hover {
+            background: var(--color-bg-soft);
+        }
+
+        .result {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+        }
+
+        .success {
+            background: var(--color-bg-soft);
+            color: var(--green-800);
+            border: 1px solid var(--border-green);
+        }
+
+        .error {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 1px solid var(--border-light);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .cta-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .cta-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .cta-buttons .btn {
+            min-width: 200px;
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-buttons .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .test-section,
+            .cta-section {
+                padding: 1.5rem;
+            }
+        }
+
+        [dir="ltr"] .lang-option {
+            text-align: left;
+        }
+
+        [dir="ltr"] .logo-text {
+            font-family: var(--font-family-main);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Main Navigation Header -->
+    <nav class="main-header" role="navigation" aria-label="Main navigation">
+        <div class="header-container">
+            <!-- Logo -->
+            <div class="logo">
+                <img src="./favicon.png" alt="Signal Logo" width="40" height="40">
+                <span class="logo-text" data-i18n="header.logo">OTP سیگنال</span>
+            </div>
+
+            <!-- Right Side Actions -->
+            <div class="header-actions">
+                <!-- Language Switcher Icon -->
+                <div class="language-dropdown" role="group" aria-label="Language selection">
+                    <button class="lang-toggle" aria-haspopup="true" aria-expanded="false" aria-label="Change Language">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                            </path>
+                        </svg>
+                        <span class="current-lang">فا</span>
+                    </button>
+                    <div class="lang-dropdown-menu" role="menu">
+                        <button class="lang-option active" data-lang="fa" data-label="فا" role="menuitemradio"
+                            aria-checked="true">
+                            <span class="lang-name">فارسی</span>
+                        </button>
+                        <button class="lang-option" data-lang="en" data-label="EN" role="menuitemradio"
+                            aria-checked="false">
+                            <span class="lang-name">English</span>
+                        </button>
+                        <button class="lang-option" data-lang="ar" data-label="عر" role="menuitemradio"
+                            aria-checked="false">
+                            <span class="lang-name">العربية</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header-section">
+            <h1 class="section-title" data-i18n="test.title">تست تأییدOTP</h1>
+            <p class="section-subtitle" data-i18n="test.subtitle">سیستم تأییدOTP یا کد OTP ما را تجربه کنید. برای تست جریون، شماره تلفن خود را وارد کنید.</p>
+        </header>
+
+        <!-- Main Test Section -->
+        <section class="test-section">
+            <div class="form-group">
+                <label for="phone-number" data-i18n="test.phone_label">شماره تلفن</label>
+                <input type="tel" id="phone-number" placeholder="+989123456789" dir="ltr"
+                    data-i18n="test.phone_placeholder">
+            </div>
+            <button class="btn btn-primary" id="send-otp" data-i18n="test.start_test">شروع تستOTP</button>
+            <div id="result" class="result hidden"></div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <h2 class="section-title" data-i18n="test.cta_title">آماده شروع هستید؟</h2>
+            <p class="section-subtitle" data-i18n="test.cta_subtitle">تست شما کامل شد! اکنون برای استفاده از تأیید
+                تماس بی‌پاسخ ثبت‌نام کنید.</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary" data-i18n="test.sign_up">ثبت‌نام و شروع</a>
+                <a href="#" class="btn btn-secondary" data-i18n="test.download_proposal">دانلود پروپوزال OTP</a>
+                <a href="#" class="btn btn-outline" data-i18n="test.download_figma">دانلود فایل فیگما</a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Translations object
+        const translations = {
+            fa: {
+                header: {
+                    logo: "OTP سیگنال"
+                },
+                test: {
+                    title: "تست تأییدOTP",
+                    subtitle: "سیستم تأییدOTP یا کد OTP ما را تجربه کنید. برای تست جریون، شماره تلفن خود را وارد کنید.",
+                    phone_label: "شماره تلفن",
+                    phone_placeholder: "+989123456789",
+                    start_test: "شروع تستOTP",
+                    sign_up: "ثبت‌نام و شروع",
+                    download_proposal: "دانلود پروپوزال OTP",
+                    download_figma: "دانلود فایل فیگما",
+                    cta_title: "آماده شروع هستید؟",
+                    cta_subtitle: "تست شما کامل شد! اکنون برای استفاده از تأیید تماس بی‌پاسخ ثبت‌نام کنید.",
+                    sending: "در حال ارسال...",
+                    success: "OTP با موفقیت ارسال شد!",
+                    error: "خطا: "
+                }
+            },
+            en: {
+                header: {
+                    logo: "Signal OTP"
+                },
+                test: {
+                    title: "OTP Verification Test",
+                    subtitle: "Experience our OTP verification system. Enter your phone number to test the flow.",
+                    phone_label: "Phone Number",
+                    phone_placeholder: "+989123456789",
+                    start_test: "Start OTP Test",
+                    sign_up: "Sign Up & Get Started",
+                    download_proposal: "Download OTP Proposal",
+                    download_figma: "Download Figma File",
+                    cta_title: "Ready to Get Started?",
+                    cta_subtitle: "Your test is complete! Now sign up to use the missed call verification service.",
+                    sending: "Sending...",
+                    success: "OTP sent successfully!",
+                    error: "Error: "
+                }
+            },
+            ar: {
+                header: {
+                    logo: "OTP سيغنال"
+                },
+                test: {
+                    title: "اختبار التحقق من OTP",
+                    subtitle: "جرب نظام التحقق من OTP الخاص بنا. أدخل رقم هاتفك لاختبار العملية.",
+                    phone_label: "رقم الهاتف",
+                    phone_placeholder: "+989123456789",
+                    start_test: "بدء اختبار OTP",
+                    sign_up: "التسجيل والبدء",
+                    download_proposal: "تنزيل اقتراح OTP",
+                    download_figma: "تنزيل ملف فيغما",
+                    cta_title: "هل أنت مستعد للبدء؟",
+                    cta_subtitle: "اكتمل اختبارك! الآن سجل للحصول على خدمة التحقق من المكالمات الفائتة.",
+                    sending: "قيد الإرسال...",
+                    success: "تم إرسال OTP بنجاح!",
+                    error: "خطأ: "
+                }
+            }
+        };
+
+        // Language switching functionality
+        const languageSwitcher = {
+            currentLang: 'fa',
+
+            init() {
+                // Load saved language or default to Farsi
+                const savedLang = localStorage.getItem('language') || 'fa';
+                this.setLanguage(savedLang);
+
+                // Setup language dropdown toggle
+                this.setupLanguageDropdown();
+            },
+
+            setupLanguageDropdown() {
+                const langToggle = document.querySelector('.lang-toggle');
+                const dropdown = document.querySelector('.language-dropdown');
+
+                if (langToggle && dropdown) {
+                    langToggle.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        dropdown.classList.toggle('active');
+                    });
+
+                    // Close dropdown when clicking outside
+                    document.addEventListener('click', (e) => {
+                        if (!dropdown.contains(e.target)) {
+                            dropdown.classList.remove('active');
+                        }
+                    });
+                }
+
+                // Add event listeners to language dropdown options
+                const langOptions = document.querySelectorAll('.lang-option');
+                langOptions.forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const lang = option.getAttribute('data-lang');
+                        this.setLanguage(lang);
+                        // Close dropdown after selection
+                        if (dropdown) dropdown.classList.remove('active');
+                    });
+                });
+            },
+
+            setLanguage(lang) {
+                this.currentLang = lang;
+
+                // Update HTML attributes
+                document.documentElement.setAttribute('lang', lang);
+
+                // Set text direction (RTL for Farsi and Arabic, LTR for English)
+                const dir = (lang === 'fa' || lang === 'ar') ? 'rtl' : 'ltr';
+                document.documentElement.setAttribute('dir', dir);
+
+                // Update page title
+                const titles = {
+                    fa: 'OTP سیگنال - ارسال پیامک تأیید تضمینی',
+                    en: 'Signal OTP - Guaranteed Verification SMS Service',
+                    ar: 'سيجنال OTP - خدمة رسائل التحقق المضمونة'
+                };
+                document.title = titles[lang];
+
+                // Update current language display in header
+                const currentLangSpan = document.querySelector('.current-lang');
+                const langCodes = { fa: 'فا', en: 'EN', ar: 'ع' };
+                if (currentLangSpan) {
+                    currentLangSpan.textContent = langCodes[lang];
+                }
+
+                // Update active button state for dropdown options
+                document.querySelectorAll('.lang-option').forEach(option => {
+                    option.classList.remove('active');
+                    if (option.getAttribute('data-lang') === lang) {
+                        option.classList.add('active');
+                    }
+                });
+
+                // Translate all elements
+                this.translatePage(lang);
+
+                // Save language preference
+                localStorage.setItem('language', lang);
+            },
+
+            translatePage(lang) {
+                const elements = document.querySelectorAll('[data-i18n]');
+
+                elements.forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    const translation = this.getTranslation(key, lang);
+
+                    if (translation) {
+                        element.textContent = translation;
+                    }
+                });
+            },
+
+            getTranslation(key, lang) {
+                const keys = key.split('.');
+                let translation = translations[lang];
+
+                for (const k of keys) {
+                    if (translation && translation[k]) {
+                        translation = translation[k];
+                    } else {
+                        return null;
+                    }
+                }
+
+                return translation;
+            }
+        };
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize language switcher
+            languageSwitcher.init();
+
+            // Get DOM elements
+            const phoneInput = document.getElementById('phone-number');
+            const sendBtn = document.getElementById('send-otp');
+            const resultDiv = document.getElementById('result');
+
+            // Load OTPService from api.js
+            const script = document.createElement('script');
+            script.src = 'api.js';
+            script.onload = () => {
+                // Send missed call OTP
+                sendBtn.addEventListener('click', async () => {
+                    const phone = phoneInput.value.trim();
+
+                    if (!phone) {
+                        showResult('لطفاً یک شماره تلفن وارد کنید', 'error');
+                        return;
+                    }
+
+                    try {
+                        showResult('در حال ارسال...', 'success');
+                        sendBtn.disabled = true;
+                        sendBtn.textContent = translations[languageSwitcher.currentLang]?.test?.sending || 'در حال ارسال...';
+
+                        const response = await OTPService.sendMissedCallOTP(phone);
+
+                        if (response.success) {
+                            const successMessage = translations[languageSwitcher.currentLang]?.test?.success || 'OTP با موفقیت ارسال شد!';
+                            showResult(`${successMessage} Response: ${JSON.stringify(response.data)}`, 'success');
+                        } else {
+                            const errorMessage = translations[languageSwitcher.currentLang]?.test?.error || 'خطا: ';
+                            showResult(`${errorMessage} ${response.error}`, 'error');
+                        }
+                    } catch (error) {
+                        const errorMessage = translations[languageSwitcher.currentLang]?.test?.error || 'خطا: ';
+                        showResult(`${errorMessage} ${error.message}`, 'error');
+                    } finally {
+                        sendBtn.disabled = false;
+                        sendBtn.textContent = translations[languageSwitcher.currentLang]?.test?.start_test || 'شروع تستOTP';
+                    }
+                });
+            };
+            document.head.appendChild(script);
+
+            function showResult(message, type) {
+                resultDiv.textContent = message;
+                resultDiv.className = `result ${type}`;
+                resultDiv.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+
+</html>

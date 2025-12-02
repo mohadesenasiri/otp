@@ -1,0 +1,21 @@
+{
+  "name": "otp-landing-page",
+  "version": "1.0.0",
+  "description": "OTP Landing Page with Signal Integration",
+  "main": "index.js",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "otp",
+    "signal",
+    "landing-page"
+  ],
+  "author": "Signal OTP Team",
+  "license": "MIT",
+  "dependencies": {
+    "concurrently": "^7.6.0"
+  }
+}

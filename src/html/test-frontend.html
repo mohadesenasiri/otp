@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Test</title>
+</head>
+<body>
+    <h1>Frontend Test</h1>
+    <button id="testAuth">Test Authentication</button>
+    <button id="testMissedCall">Test Missed Call</button>
+    <div id="result"></div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        document.getElementById('testAuth').addEventListener('click', async () => {
+            try {
+                const token = await OTPService.obtainJWTToken();
+                document.getElementById('result').innerHTML = '<p style="color: green;">Authentication successful! Token: ' + token.substring(0, 50) + '...</p>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<p style="color: red;">Authentication failed: ' + error.message + '</p>';
+            }
+        });
+
+        document.getElementById('testMissedCall').addEventListener('click', async () => {
+            try {
+                // First get a token
+                const token = await OTPService.obtainJWTToken();
+                console.log('Token obtained:', token);
+                
+                // Then test missed call
+                const response = await OTPService.sendMissedCallOTP('09123456789');
+                document.getElementById('result').innerHTML = '<p style="color: green;">Missed call test result: ' + JSON.stringify(response) + '</p>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<p style="color: red;">Missed call test failed: ' + error.message + '</p>';
+            }
+        });
+    </script>
+</body>
+</html>
