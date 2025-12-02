@@ -88,4 +88,4 @@ npm run dev
 - Frontend: HTML, CSS, JavaScript
 - Backend: Node.js, Express
 - Authentication: JWT
-- API Integration: Signal OTP Service
+- API Integration: Signal OTP Service# otp
