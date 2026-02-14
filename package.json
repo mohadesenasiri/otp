@@ -3,10 +3,16 @@
   "version": "1.0.0",
   "description": "OTP Landing Page with Signal Integration",
   "main": "index.js",
+  "private": true,
   "scripts": {
-    "start": "cd backend && npm start",
-    "dev": "cd backend && npm run dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "node scripts/build.js --clean",
+    "build": "node scripts/build.js",
+    "start": "node server.js",
+    "dev": "node server.js",
+    "preview": "node dist/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:secure": "node server.js",
+    "start:secure:5500": "PORT=5500 node server.js"
   },
   "keywords": [
     "otp",

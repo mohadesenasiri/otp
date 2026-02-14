@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="تست آنلاین OTP سیگنال: ارسال و تأیید کد یکبار مصرف با پیامک یا تماس بی‌پاسخ." />
+  <title>تست OTP سیگنال</title>
+  <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">پرش به محتوا</a>
+  <nav class="main-header" role="navigation">
+    <div class="header-container">
+      <a class="logo" href="./index.html" aria-label="بازگشت به صفحه اصلی">
+        <img src="assets/images/favicon.png" alt="Signal OTP" width="40" height="40" />
+        <span class="logo-text">OTP سیگنال</span>
+      </a>
+
+      <div class="header-actions">
+        <a href="https://panel.signalads.com/core/auth/signup" target="_blank" rel="noopener noreferrer" class="header-cta">شروع کنید</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <main class="test-container" id="main">
+      <div class="test-card" data-reveal="up">
+        <div class="test-header" data-reveal="up">
+          <div class="test-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+          </div>
+          <h1>تست OTP</h1>
+          <p>شماره موبایل خود را وارد کنید تا کد تأیید را دریافت کنید.</p>
+        </div>
+        <div class="integration-guide" data-reveal="up">
+          <h2>راهنمای سریع اتصال</h2>
+          <ol>
+            <li>در سیگنال ثبت‌نام کنید و از بخش وب‌سرویس، <code>API_KEY</code> بگیرید.</li>
+            <li>یک الگو با متغیر <code>otp</code> بسازید و <code>pattern_id</code> را بردارید.</li>
+            <li>در <code>/otp/send</code> مقدار <code>uuid</code> را بگیرید و در <code>/otp/verify</code> همراه <code>code</code> بفرستید.</li>
+          </ol>
+          <p class="integration-guide-note">اعتبار OTP: یک دقیقه</p>
+        </div>
+
+        <form id="otpForm" class="test-form">
+          <div class="input-wrapper" data-reveal="up">
+            <label for="phone">شماره موبایل</label>
+            <div class="phone-input-group">
+              <span class="phone-prefix">+98</span>
+              <input type="tel" id="phone" name="phone" placeholder="۹۱۲۳۴۵۶۷۸۹" maxlength="10" autocomplete="tel" inputmode="numeric" required />
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn" id="sendBtn" data-reveal="up">
+            <span class="btn-text">ارسال کد</span>
+            <span class="btn-loader hidden">
+              <svg class="spinner" viewBox="0 0 24 24" width="20" height="20">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="30 70"></circle>
+              </svg>
+            </span>
+          </button>
+        </form>
+
+        <div id="verifySection" class="verify-section hidden">
+          <div class="status-banner">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <span class="status-label">در حال ارسال کد به شماره</span>
+            <strong id="displayPhone" class="ltr-value"></strong>
+          </div>
+
+          <div class="otp-timer">
+            <div class="timer-ring">
+              <svg viewBox="0 0 100 100">
+                <circle class="timer-bg" cx="50" cy="50" r="45"></circle>
+                <circle class="timer-progress" cx="50" cy="50" r="45"></circle>
+              </svg>
+              <span class="timer-count" id="timerCount">60</span>
+            </div>
+          </div>
+
+          <div class="code-entry" dir="ltr" aria-label="ورود کد تایید میسکال">
+            <div id="callerPrefixRow" class="caller-prefix-row hidden" aria-label="پیشوند تماس میسکال">
+              <span class="caller-prefix-label">پیش‌شماره تماس</span>
+              <strong id="callerPrefix" class="ltr-value"></strong>
+            </div>
+            <div class="code-inputs" aria-label="کد تایید ۴ رقمی">
+              <input type="text" class="digit-input" maxlength="1" data-index="0" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" aria-label="رقم ۱" />
+              <input type="text" class="digit-input" maxlength="1" data-index="1" inputmode="numeric" pattern="[0-9]*" aria-label="رقم ۲" />
+              <input type="text" class="digit-input" maxlength="1" data-index="2" inputmode="numeric" pattern="[0-9]*" aria-label="رقم ۳" />
+              <input type="text" class="digit-input" maxlength="1" data-index="3" inputmode="numeric" pattern="[0-9]*" aria-label="رقم ۴" />
+            </div>
+          </div>
+
+          <div class="verify-actions">
+            <button type="button" class="verify-btn" id="verifyBtn">تأیید کد</button>
+            <button type="button" class="resend-btn" id="resendBtn">ارسال مجدد</button>
+          </div>
+        </div>
+
+        <div id="resultModal" class="modal-overlay hidden">
+          <div class="modal-card">
+            <div class="modal-icon" id="modalIcon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </div>
+            <h3 id="modalTitle">موفق!</h3>
+            <p id="modalMessage">کد با موفقیت تأیید شد</p>
+            <button type="button" class="modal-btn" id="modalClose">باشه</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <section class="features-preview" data-reveal="up">
+      <div class="feature-item" data-reveal="up">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <span>ارسال زیر ۱۰ ثانیه</span>
+      </div>
+      <div class="feature-item" data-reveal="up">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        <span>تحویل تضمینی</span>
+      </div>
+      <div class="feature-item" data-reveal="up">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1"></rect><rect x="13" y="3" width="8" height="8" rx="1"></rect><rect x="3" y="13" width="8" height="8" rx="1"></rect><rect x="13" y="13" width="8" height="8" rx="1"></rect></svg>
+        <span>کد ۴ رقمی پیش‌فرض</span>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const API_BASE_CANDIDATES = (() => {
+      return ['/api/otp', 'http://127.0.0.1:3000/api/otp', 'http://localhost:3000/api/otp'];
+    })();
+    const API_PATTERN_ID = 950;
+    let otpUuid = null;
+    let timerInterval = null;
+    let currentPhone = '';
+    let callerNumberRaw = null;
+    let callerNumberIsPrefixOnly = false;
+
+    async function safeParseResponse(response) {
+      const raw = await response.text();
+      if (!raw) return {};
+
+      try {
+        return JSON.parse(raw);
+      } catch {
+        return {
+          message: 'پاسخ نامعتبر از سرور',
+          raw
+        };
+      }
+    }
+
+    function normalizeApiError(response, data, fallbackMessage) {
+      if (response.status === 404 || response.status === 405) {
+        return window.location.port === '5500'
+          ? 'سرور API روی پورت 3000 فعال نیست.'
+          : 'API داخلی فعال نیست. پروژه را با سرور امن اجرا کنید.';
+      }
+      return data.message || fallbackMessage;
+    }
+
+    async function postWithFallback(path, payload) {
+      let lastError = null;
+
+      for (const baseUrl of API_BASE_CANDIDATES) {
+        try {
+          const response = await fetch(`${baseUrl}${path}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+
+          const data = await safeParseResponse(response);
+          if (!response.ok && (response.status === 404 || response.status === 405)) {
+            lastError = new Error(`API candidate rejected (${response.status}) at ${baseUrl}`);
+            continue;
+          }
+          return { response, data };
+        } catch (error) {
+          lastError = error;
+        }
+      }
+
+      throw lastError || new Error('API is unreachable');
+    }
+
+    async function sendOTP(phoneNumber) {
+      try {
+        const { response, data } = await postWithFallback('/send', {
+          mobile: phoneNumber,
+          pattern_id: API_PATTERN_ID
+        });
+
+        console.log('Response status:', response.status);
+        console.log('Response data:', data);
+
+        if (!response.ok) {
+          return {
+            success: false,
+            error: normalizeApiError(response, data, 'خطا در ارسال OTP')
+          };
+        }
+
+        return {
+          success: true,
+          data: data
+        };
+      } catch (error) {
+        console.error('Fetch error:', error);
+        return {
+          success: false,
+          error: error.message || 'خطا در اتصال به سرور'
+        };
+      }
+    }
+
+    async function verifyOTP(uuid, code) {
+      try {
+        const { response, data } = await postWithFallback('/verify', {
+          uuid: uuid,
+          code: code
+        });
+
+        console.log('Verify response status:', response.status);
+        console.log('Verify response data:', data);
+
+        if (!response.ok) {
+          return {
+            success: false,
+            error: normalizeApiError(response, data, 'خطا در تأیید کد')
+          };
+        }
+
+        return {
+          success: true,
+          data: data
+        };
+      } catch (error) {
+        console.error('Verify error:', error);
+        return {
+          success: false,
+          error: error.message || 'خطا در اتصال به سرور'
+        };
+      }
+    }
+
+    const phoneInput = document.getElementById('phone');
+	    const otpForm = document.getElementById('otpForm');
+	    const sendBtn = document.getElementById('sendBtn');
+	    const verifySection = document.getElementById('verifySection');
+	    const displayPhone = document.getElementById('displayPhone');
+	    const callerPrefixRow = document.getElementById('callerPrefixRow');
+	    const callerPrefix = document.getElementById('callerPrefix');
+	    const digitInputs = document.querySelectorAll('.digit-input');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const resendBtn = document.getElementById('resendBtn');
+    const timerCount = document.getElementById('timerCount');
+    const timerProgress = document.querySelector('.timer-progress');
+    const modalOverlay = document.getElementById('resultModal');
+    const modalIcon = document.getElementById('modalIcon');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMessage = document.getElementById('modalMessage');
+    const modalClose = document.getElementById('modalClose');
+
+    const TIMER_DURATION = 60;
+
+    function closeModal() {
+      modalOverlay.classList.add('hidden');
+    }
+
+    function initializePageState() {
+      // Always start from phone input step
+      closeModal();
+      verifySection.classList.add('hidden');
+      phoneInput.disabled = false;
+      sendBtn.classList.remove('hidden');
+    }
+
+    function normalizeDigits(value) {
+      return String(value || '')
+        .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 1776))
+        .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 1632));
+    }
+
+    function normalizeIranianMobile(input) {
+      let digits = normalizeDigits(input).replace(/\D/g, '');
+
+      if (digits.startsWith('0098')) {
+        digits = digits.slice(4);
+      } else if (digits.startsWith('98')) {
+        digits = digits.slice(2);
+      }
+
+      if (digits.length === 11 && digits.startsWith('09')) {
+        return digits;
+      }
+
+      if (digits.length === 10 && digits.startsWith('9')) {
+        return `0${digits}`;
+      }
+
+      return null;
+    }
+
+    phoneInput.addEventListener('input', (e) => {
+      e.target.value = normalizeDigits(e.target.value).replace(/\D/g, '');
+    });
+
+    phoneInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        otpForm.dispatchEvent(new Event('submit'));
+      }
+    });
+
+    otpForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      console.log('Form submitted');
+
+      const phone = normalizeIranianMobile(phoneInput.value);
+
+      console.log('Phone:', phone);
+
+      if (!phone) {
+        showModal(false, 'ناموفق', 'شماره موبایل معتبر وارد کنید');
+        return;
+      }
+
+      currentPhone = phone;
+      displayPhone.textContent = phone.replace(/(\d{4})(\d{3})(\d{4})/, '$1 $2 $3');
+      await sendOTPRequest(phone);
+    });
+
+	    async function sendOTPRequest(phone) {
+	      setBtnLoading(sendBtn, true);
+
+	      const result = await sendOTP(phone);
+
+	      setBtnLoading(sendBtn, false);
+
+	      console.log('Send result:', result);
+
+	      if (result.success && (result.data?.success !== false)) {
+	        otpUuid = result.data?.data?.uuid || result.data?.uuid || result.data?.data?.otp_uuid || result.data?.otp_uuid;
+	        callerNumberRaw = null;
+	        callerNumberIsPrefixOnly = false;
+
+	        // verifier_number is the 7-digit caller prefix; show it fully as a label before the 4 inputs.
+	        const verifierNumber =
+	          result.data?.data?.verifier_number ??
+	          result.data?.verifier_number ??
+	          null;
+
+	        if (verifierNumber !== null && verifierNumber !== undefined && String(verifierNumber).trim() !== '') {
+	          callerNumberRaw = String(verifierNumber).trim();
+	          callerNumberIsPrefixOnly = true;
+	        } else {
+	          // Other possible field names (kept for compatibility). These might include the full number.
+	          const other =
+	            result.data?.data?.caller_number ||
+	            result.data?.data?.callerNumber ||
+	            result.data?.data?.caller ||
+	            result.data?.data?.from ||
+	            result.data?.caller_number ||
+	            result.data?.callerNumber ||
+	            result.data?.caller ||
+	            result.data?.from ||
+	            null;
+
+	          if (other !== null && other !== undefined && String(other).trim() !== '') {
+	            callerNumberRaw = String(other).trim();
+	          }
+	        }
+	        console.log('OTP UUID:', otpUuid);
+	        showVerifySection();
+	        startTimer();
+	      } else {
+	        showModal(false, 'ناموفق', result.error || 'ارسال کد ناموفق بود');
+	      }
+	    }
+
+	    function updateCallerPrefixUI() {
+	      if (!callerPrefix || !callerPrefixRow) return;
+	      if (!callerNumberRaw) {
+	        callerPrefix.textContent = '';
+	        callerPrefixRow.classList.add('hidden');
+	        return;
+	      }
+
+	      const raw = String(callerNumberRaw);
+	      if (callerNumberIsPrefixOnly) {
+	        callerPrefix.textContent = raw;
+	        callerPrefixRow.classList.remove('hidden');
+	        return;
+	      }
+
+	      if (raw.length <= 4) {
+	        callerPrefix.textContent = '';
+	        callerPrefixRow.classList.add('hidden');
+	        return;
+	      }
+
+	      // Only show the prefix (everything except the last 4 digits); last 4 digits come from the inputs.
+	      callerPrefix.textContent = raw.slice(0, raw.length - 4);
+	      callerPrefixRow.classList.remove('hidden');
+	    }
+
+	    function showVerifySection() {
+	      verifySection.classList.remove('hidden');
+	      document.body.classList.add('is-verifying');
+	      phoneInput.disabled = true;
+	      sendBtn.classList.add('hidden');
+	      resendBtn.disabled = true;
+	      resendBtn.classList.remove('active');
+	      updateCallerPrefixUI();
+	      digitInputs[0].focus();
+	    }
+
+    function startTimer() {
+      let remaining = TIMER_DURATION;
+      const circumference = 2 * Math.PI * 45;
+      const progressEl = document.querySelector('.timer-progress');
+      
+      progressEl.style.strokeDasharray = circumference;
+      progressEl.style.strokeDashoffset = circumference;
+
+      timerCount.textContent = remaining;
+
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        remaining--;
+        timerCount.textContent = remaining;
+
+        const offset = circumference - (remaining / TIMER_DURATION) * circumference;
+        progressEl.style.strokeDashoffset = circumference - offset;
+
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          resendBtn.disabled = false;
+          resendBtn.classList.add('active');
+        }
+      }, 1000);
+    }
+
+    digitInputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        e.target.value = normalizeDigits(e.target.value).replace(/\D/g, '').slice(0, 1);
+        const value = e.target.value;
+        if (value && index < digitInputs.length - 1) {
+          digitInputs[index + 1].focus();
+        }
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !e.target.value && index > 0) {
+          digitInputs[index - 1].focus();
+        }
+      });
+
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const paste = normalizeDigits(e.clipboardData.getData('text')).replace(/\D/g, '').slice(0, digitInputs.length);
+        paste.split('').forEach((char, i) => {
+          if (digitInputs[i]) {
+            digitInputs[i].value = char;
+          }
+        });
+        const lastFilled = Math.min(paste.length, digitInputs.length) - 1;
+        if (digitInputs[lastFilled]) {
+          digitInputs[lastFilled].focus();
+        }
+      });
+    });
+
+    verifyBtn.addEventListener('click', async () => {
+      const code = normalizeDigits(Array.from(digitInputs).map(input => input.value).join('')).replace(/\D/g, '');
+
+      if (code.length !== digitInputs.length) {
+        showModal(false, 'خطا', `کد ${digitInputs.length} رقمی را کامل وارد کنید`);
+        return;
+      }
+
+      setBtnLoading(verifyBtn, true);
+
+      const result = await verifyOTP(otpUuid, code);
+
+      setBtnLoading(verifyBtn, false);
+
+      console.log('Verify result:', result);
+
+      const verified = result.data?.verified === true || result.data?.data?.verified === true;
+      if (result.success && (result.data?.success !== false) && verified) {
+        showModal(true, 'موفق!', 'کد با موفقیت تأیید شد');
+        resetForm();
+      } else {
+        showModal(false, 'ناموفق', result.error || 'کد وارد شده اشتباه است یا منقضی شده است');
+        digitInputs.forEach(input => input.value = '');
+        digitInputs[0].focus();
+      }
+    });
+
+    resendBtn.addEventListener('click', async () => {
+      resendBtn.disabled = true;
+      resendBtn.classList.remove('active');
+      await sendOTPRequest(currentPhone);
+    });
+
+    modalClose.addEventListener('click', closeModal);
+
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    function showModal(success, title, message) {
+      modalTitle.textContent = title;
+      modalMessage.textContent = message;
+
+      if (success) {
+        modalIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
+        modalIcon.style.color = '#14b8a6';
+      } else {
+        modalIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+        modalIcon.style.color = '#f59e0b';
+      }
+
+      modalOverlay.classList.remove('hidden');
+      console.log('Modal shown:', success, title, message);
+    }
+
+    function setBtnLoading(btn, loading) {
+      const textEl = btn.querySelector('.btn-text');
+      const loaderEl = btn.querySelector('.btn-loader');
+
+      if (!textEl || !loaderEl) {
+        btn.disabled = loading;
+        return;
+      }
+
+      if (loading) {
+        textEl.classList.add('hidden');
+        loaderEl.classList.remove('hidden');
+        btn.disabled = true;
+      } else {
+        textEl.classList.remove('hidden');
+        loaderEl.classList.add('hidden');
+        btn.disabled = false;
+      }
+    }
+
+	    function resetForm() {
+	      digitInputs.forEach(input => input.value = '');
+	      verifySection.classList.add('hidden');
+	      document.body.classList.remove('is-verifying');
+	      phoneInput.disabled = false;
+	      sendBtn.classList.remove('hidden');
+	      phoneInput.value = '';
+	      callerNumberRaw = null;
+	      callerNumberIsPrefixOnly = false;
+	      updateCallerPrefixUI();
+	      clearInterval(timerInterval);
+	    }
+
+    function initCinematicMotion() {
+      const revealItems = document.querySelectorAll('[data-reveal]');
+      if (!revealItems.length) return;
+
+      if (!('IntersectionObserver' in window)) {
+        revealItems.forEach((el) => el.classList.add('is-visible'));
+        return;
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+
+      revealItems.forEach((el) => observer.observe(el));
+    }
+
+    initCinematicMotion();
+    initializePageState();
+    console.log('OTP Test page loaded with server-side proxy.');
+  </script>
+
+    <style>
+    .page-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      padding: 6rem 1rem 2.5rem;
+      background:
+        radial-gradient(circle at 15% 18%, rgba(18, 167, 159, 0.15), transparent 34%),
+        radial-gradient(circle at 82% 16%, rgba(251, 146, 60, 0.16), transparent 30%),
+        linear-gradient(180deg, #f7fbff 0%, #edf4ff 100%);
+      overflow-x: hidden;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform, opacity;
+    }
+
+    [data-reveal].is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .main-header .logo {
+      text-decoration: none;
+    }
+
+    .logo-text {
+      font-weight: 900;
+      color: #0f304d;
+    }
+
+    .header-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0.45rem 1rem;
+      border-radius: 10px;
+      font-weight: 700;
+      color: #124f7a;
+      border: 1px solid #ccdaf2;
+      background: rgba(255, 255, 255, 0.8);
+      transition: all 0.25s ease;
+    }
+
+    .header-cta:hover {
+      color: white;
+      border-color: var(--primary);
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      box-shadow: 0 10px 24px rgba(12, 123, 120, 0.3);
+    }
+
+    .test-container {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .test-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 28px;
+      padding: 2.7rem 2.1rem 2.1rem;
+      border: 1px solid #d6e1f4;
+      box-shadow: 0 30px 60px rgba(15, 23, 42, 0.14);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+    }
+
+    .test-card::before {
+      content: "";
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      top: -120px;
+      left: -120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(18, 167, 159, 0.2), transparent 70%);
+      pointer-events: none;
+    }
+
+    .test-card::after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      bottom: -130px;
+      right: -90px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(251, 146, 60, 0.2), transparent 70%);
+      pointer-events: none;
+    }
+
+    .test-header {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      margin-bottom: 1.8rem;
+    }
+
+    .test-icon {
+      width: 78px;
+      height: 78px;
+      margin: 0 auto 1rem;
+      background: linear-gradient(140deg, #13a39b 0%, #0d6c84 100%);
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 16px 35px rgba(12, 123, 120, 0.35);
+      transform: rotate(-6deg);
+    }
+
+    .test-icon svg {
+      transform: rotate(6deg);
+    }
+
+    .test-header h1 {
+      margin: 0 0 0.55rem;
+      font-size: 1.75rem;
+      font-weight: 900;
+      color: #112a47;
+      letter-spacing: -0.02em;
+    }
+
+    .test-header p {
+      margin: 0;
+      color: #4f647f;
+      font-size: 0.96rem;
+      line-height: 1.8;
+    }
+
+    .test-form {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 1rem;
+    }
+
+    .integration-guide {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 1.1rem;
+      padding: 1rem 1.1rem;
+      border: 1px solid #d7e3f3;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.86);
+    }
+
+    /* When user is in the verify step, keep the focus on OTP entry on small screens. */
+    body.is-verifying .integration-guide {
+      display: none;
+    }
+
+    .integration-guide h2 {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #143556;
+    }
+
+    .integration-guide ol {
+      margin: 0;
+      padding-right: 1.2rem;
+      color: #355474;
+      font-size: 0.89rem;
+      line-height: 1.9;
+    }
+
+    .integration-guide code {
+      font-family: monospace;
+      color: #0d4c73;
+      background: #eef5ff;
+      padding: 0.1rem 0.35rem;
+      border-radius: 6px;
+      font-size: 0.84rem;
+      direction: ltr;
+      unicode-bidi: embed;
+      display: inline-block;
+    }
+
+    .integration-guide-note {
+      margin: 0.5rem 0 0;
+      color: #0d6c84;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .input-wrapper {
+      margin-bottom: 1rem;
+    }
+
+    .input-wrapper label {
+      display: block;
+      margin-bottom: 0.6rem;
+      font-weight: 700;
+      color: #1c3d61;
+      font-size: 0.9rem;
+    }
+
+    .phone-input-group {
+      display: flex;
+      align-items: center;
+      direction: ltr;
+      border: 1px solid #d6e2f2;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: inset 0 2px 8px rgba(15, 23, 42, 0.03);
+      overflow: hidden;
+      transition: all 0.25s ease;
+    }
+
+    .phone-input-group:focus-within {
+      border-color: #7accc7;
+      box-shadow: 0 0 0 4px rgba(18, 167, 159, 0.14), inset 0 2px 8px rgba(15, 23, 42, 0.03);
+    }
+
+    .phone-prefix {
+      padding: 0.9rem 0.9rem;
+      background: #eef4ff;
+      color: #3f5c7f;
+      font-weight: 700;
+      border-right: 1px solid #d7e1f3;
+      direction: ltr;
+      unicode-bidi: isolate;
+    }
+
+    .phone-input-group input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 1.03rem;
+      font-weight: 700;
+      color: #0f2842;
+      padding: 0.9rem 1rem;
+      letter-spacing: 0.04em;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .submit-btn,
+    .verify-btn {
+      width: 100%;
+      min-height: 52px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #0d7f7b 0%, #0d6786 100%);
+      color: white;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      box-shadow: 0 16px 32px rgba(12, 123, 120, 0.35);
+      transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+    }
+
+    .submit-btn:hover,
+    .verify-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 40px rgba(12, 123, 120, 0.4);
+      filter: saturate(1.07);
+    }
+
+    .submit-btn:disabled,
+    .verify-btn:disabled {
+      opacity: 0.75;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: 0 8px 20px rgba(12, 123, 120, 0.22);
+      filter: none;
+    }
+
+    .btn-loader {
+      line-height: 0;
+    }
+
+    .spinner {
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .verify-section {
+      position: relative;
+      z-index: 1;
+      margin-top: 1.4rem;
+      padding-top: 1.5rem;
+      border-top: 1px dashed #c8d6ee;
+    }
+
+    .verify-section:not(.hidden) {
+      animation: verifySlide 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes verifySlide {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .status-banner {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      padding: 0.85rem 0.8rem;
+      border-radius: 13px;
+      background: linear-gradient(135deg, rgba(12, 123, 120, 0.14), rgba(18, 167, 159, 0.08));
+      border: 1px solid rgba(18, 167, 159, 0.22);
+      color: #0f6460;
+      font-size: 0.9rem;
+      margin-bottom: 1.4rem;
+      max-width: 100%;
+    }
+
+    .status-banner strong {
+      font-family: "AbarLowFaNum", sans-serif;
+      color: #0e4d78;
+    }
+
+    .status-label {
+      direction: rtl;
+    }
+
+    .ltr-value {
+      direction: ltr;
+      unicode-bidi: isolate;
+      text-align: left;
+      display: inline-block;
+      min-width: 9.6ch;
+    }
+
+    #displayPhone {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .otp-timer {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.1rem;
+    }
+
+    .timer-ring {
+      position: relative;
+      width: 112px;
+      height: 112px;
+    }
+
+    .timer-ring svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .timer-bg {
+      fill: none;
+      stroke: #dce5f4;
+      stroke-width: 8;
+    }
+
+    .timer-progress {
+      fill: none;
+      stroke: var(--primary);
+      stroke-width: 8;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s linear;
+      filter: drop-shadow(0 4px 8px rgba(12, 123, 120, 0.28));
+    }
+
+    .timer-count {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: #183858;
+      font-family: "AbarLowFaNum", sans-serif;
+    }
+
+	    .code-entry {
+	      display: flex;
+	      flex-direction: column;
+	      align-items: stretch;
+	      justify-content: flex-start;
+	      direction: ltr;
+	      gap: 0.75rem;
+	      margin-bottom: 1.15rem;
+	      padding-inline: 0.5rem;
+	      max-width: 100%;
+	    }
+
+	    .code-entry > * {
+	      min-width: 0;
+	    }
+
+	    .code-inputs {
+	      display: flex;
+	      justify-content: center;
+	      gap: 0.6rem;
+	      margin-bottom: 0;
+	      direction: ltr;
+	      flex-wrap: nowrap;
+	      width: 100%;
+	    }
+
+	    .caller-prefix-row {
+	      display: inline-flex;
+	      align-items: center;
+	      justify-content: center;
+	      gap: 0.5rem;
+	      margin: 0;
+	      color: #2b4a6a;
+	      font-family: "AbarLowFaNum", sans-serif;
+	      padding: 0.45rem 0.75rem;
+	      border-radius: 999px;
+	      border: 1px solid rgba(18, 167, 159, 0.26);
+	      background: linear-gradient(135deg, rgba(12, 123, 120, 0.12), rgba(18, 167, 159, 0.06));
+	      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06);
+	      max-width: 100%;
+	      width: 100%;
+	      direction: rtl;
+	    }
+
+	    .caller-prefix-label {
+	      font-size: 0.9rem;
+	      font-weight: 700;
+	      opacity: 0.92;
+	    }
+
+	    #callerPrefix {
+	      min-width: 0;
+	      letter-spacing: 0.06em;
+	      white-space: nowrap;
+	    }
+
+	    .digit-input {
+	      width: clamp(46px, 12vw, 56px);
+	      height: clamp(54px, 13vw, 62px);
+	      border-radius: 14px;
+	      border: 1px solid rgba(198, 208, 230, 0.95);
+      background: rgba(255, 255, 255, 0.9);
+      text-align: center;
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #0f2f4f;
+      outline: none;
+      box-shadow: inset 0 2px 8px rgba(15, 23, 42, 0.02);
+      transition: all 0.2s ease;
+      font-family: "AbarLowFaNum", sans-serif;
+    }
+
+    .digit-input:focus {
+      border-color: #67c6bf;
+      box-shadow: 0 0 0 3px rgba(18, 167, 159, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .verify-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.7rem;
+    }
+
+    .resend-btn {
+      min-height: 52px;
+      border-radius: 14px;
+      border: 1px solid #cfdbf0;
+      background: rgba(255, 255, 255, 0.9);
+      color: #3f5f80;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .resend-btn:hover:not(:disabled) {
+      color: #0f5776;
+      border-color: #89bddf;
+      background: #f3f8ff;
+      transform: translateY(-1px);
+    }
+
+    .resend-btn.active:not(:disabled) {
+      color: #0f5f5b;
+      border-color: rgba(18, 167, 159, 0.46);
+      background: rgba(18, 167, 159, 0.12);
+    }
+
+    .resend-btn:disabled {
+      opacity: 0.54;
+      cursor: not-allowed;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(5, 15, 32, 0.6);
+      backdrop-filter: blur(8px);
+    }
+
+    .hidden {
+      display: none !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 360px;
+      border-radius: 24px;
+      border: 1px solid #d7e1f3;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 32px 65px rgba(15, 23, 42, 0.25);
+      text-align: center;
+      padding: 2rem 1.7rem 1.5rem;
+      animation: modalIn 0.3s ease;
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .modal-icon {
+      margin-bottom: 0.8rem;
+    }
+
+    .modal-card h3 {
+      margin: 0 0 0.45rem;
+      color: #102d4b;
+      font-size: 1.25rem;
+      font-weight: 900;
+    }
+
+    .modal-card p {
+      margin: 0 0 1.35rem;
+      color: #4d637e;
+      line-height: 1.7;
+    }
+
+    .modal-btn {
+      min-height: 46px;
+      padding: 0.7rem 1.7rem;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0d7f7b, #0d6786);
+      color: white;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 10px 22px rgba(12, 123, 120, 0.3);
+    }
+
+    .modal-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(12, 123, 120, 0.36);
+    }
+
+    .features-preview {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(150px, 1fr));
+      gap: 0.8rem;
+      width: min(100%, 720px);
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      min-height: 46px;
+      padding: 0.4rem 0.7rem;
+      border: 1px solid #d4e0f2;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.78);
+      color: #3d5d7f;
+      font-size: 0.86rem;
+      font-weight: 700;
+      backdrop-filter: blur(6px);
+    }
+
+    .feature-item svg {
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .feature-item:nth-child(1) {
+      transition-delay: 80ms;
+    }
+
+    .feature-item:nth-child(2) {
+      transition-delay: 150ms;
+    }
+
+    .feature-item:nth-child(3) {
+      transition-delay: 220ms;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .page-wrapper {
+        justify-content: flex-start;
+        padding-top: 4.9rem;
+        gap: 1.15rem;
+      }
+
+      .header-cta {
+        min-height: 38px;
+        padding: 0.35rem 0.75rem;
+        font-size: 0.85rem;
+      }
+
+      .test-container {
+        max-width: 100%;
+      }
+
+      .features-preview {
+        grid-template-columns: 1fr;
+      }
+
+      .verify-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .otp-timer {
+        margin-bottom: 0.9rem;
+      }
+
+      .timer-ring {
+        width: 92px;
+        height: 92px;
+      }
+    }
+
+    @media (max-width: 480px) {
+       .page-wrapper {
+         padding: 4rem 0.4rem 0.75rem;
+       }
+
+       .header-cta {
+         display: none;
+       }
+
+       .test-card {
+         padding: 1.2rem 0.6rem 0.85rem;
+         border-radius: 16px;
+         box-shadow: 0 10px 24px rgba(15, 23, 42, 0.1);
+       }
+
+       .test-header {
+         margin-bottom: 1rem;
+       }
+
+       .test-header h1 {
+         font-size: 1.2rem;
+       }
+
+       .test-header p {
+         font-size: 0.82rem;
+         line-height: 1.6;
+       }
+
+       .test-icon {
+         width: 56px;
+         height: 56px;
+         border-radius: 14px;
+         margin-bottom: 0.75rem;
+       }
+
+       .test-icon svg {
+         width: 28px;
+         height: 28px;
+       }
+
+ 	      .digit-input {
+ 	        width: clamp(44px, 14vw, 52px);
+ 	        height: 52px;
+ 	        font-size: 1.05rem;
+ 	        border-radius: 12px;
+ 	      }
+
+	      .code-entry {
+	        gap: 0.6rem;
+	        padding-inline: 0.25rem;
+	        margin-bottom: 0.9rem;
+	        justify-content: center;
+	      }
+
+	      .code-inputs {
+	        gap: 0.45rem;
+	        padding: 0;
+	        width: 100%;
+	        justify-content: center;
+	      }
+
+ 	      .caller-prefix-label {
+ 	        display: none;
+ 	      }
+
+	      .caller-prefix-row {
+	        padding: 0.38rem 0.6rem;
+	        font-size: 0.82rem;
+	        width: 100%;
+	        justify-content: center;
+	        align-self: stretch;
+	      }
+
+ 	      #callerPrefix {
+ 	        letter-spacing: 0.02em;
+ 	      }
+
+ 	      .verify-actions {
+ 	        grid-template-columns: 1fr;
+ 	        gap: 0.4rem;
+ 	      }
+
+        .resend-btn {
+          min-height: 44px;
+          background: rgba(255, 255, 255, 0.65);
+          border-color: rgba(198, 208, 230, 0.8);
+        }
+
+       .status-banner {
+         font-size: 0.72rem;
+         padding: 0.5rem 0.35rem;
+         flex-direction: column;
+         gap: 0.15rem;
+         margin-bottom: 1rem;
+       }
+
+       .status-label {
+         order: 2;
+       }
+
+       .ltr-value {
+         min-width: auto;
+         order: 1;
+         font-size: 0.85rem;
+       }
+
+       .timer-ring {
+        width: 84px;
+        height: 84px;
+        margin-bottom: 0.75rem;
+       }
+
+ 	      .timer-count {
+ 	        font-size: 1.1rem;
+ 	      }
+
+ 	      .timer-bg, .timer-progress {
+ 	        stroke-width: 6;
+ 	      }
+
+ 	      .integration-guide {
+ 	        padding: 0.65rem 0.75rem;
+ 	        font-size: 0.78rem;
+ 	        margin-bottom: 0.85rem;
+ 	      }
+
+ 	      .integration-guide h2 {
+ 	        font-size: 0.9rem;
+ 	      }
+
+ 	      .integration-guide ol {
+ 	        padding-right: 0.9rem;
+ 	        font-size: 0.76rem;
+ 	        line-height: 1.7;
+ 	      }
+
+ 	      .integration-guide code {
+ 	        font-size: 0.72rem;
+ 	        padding: 0.08rem 0.25rem;
+ 	      }
+
+ 	      .phone-input-group input {
+ 	        font-size: 0.85rem;
+ 	        padding: 0.6rem 0.6rem;
+ 	      }
+
+ 	      .phone-prefix {
+ 	        padding: 0.6rem 0.5rem;
+ 	        font-size: 0.8rem;
+ 	      }
+
+ 	      .submit-btn, .verify-btn {
+ 	        min-height: 42px;
+ 	        font-size: 0.88rem;
+ 	        padding: 0.65rem 1rem;
+ 	      }
+
+ 	      .resend-btn {
+ 	        min-height: 42px;
+ 	        font-size: 0.85rem;
+ 	      }
+
+ 	      .input-wrapper {
+ 	        margin-bottom: 0.75rem;
+ 	      }
+
+ 	      .input-wrapper label {
+ 	        font-size: 0.82rem;
+ 	        margin-bottom: 0.45rem;
+ 	      }
+
+ 	      .verify-section {
+ 	        margin-top: 1rem;
+ 	        padding-top: 1rem;
+ 	      }
+
+ 	      .modal-card {
+ 	        padding: 1.5rem 1rem 1.2rem;
+ 	        border-radius: 18px;
+ 	      }
+
+ 	      .modal-card h3 {
+ 	        font-size: 1.1rem;
+ 	      }
+
+ 	      .modal-card p {
+ 	        font-size: 0.88rem;
+ 	      }
+
+ 	      .modal-btn {
+ 	        min-height: 40px;
+ 	        font-size: 0.9rem;
+ 	      }
+
+ 	      .feature-item {
+ 	        min-height: 40px;
+ 	        font-size: 0.78rem;
+ 	        padding: 0.35rem 0.55rem;
+ 	      }
+	    }
+
+ 
+  </style>
+	</body>
+	</html>
