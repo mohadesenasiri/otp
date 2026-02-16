@@ -1,535 +1,0 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="OTP سیگنال: ارسال کد تایید با پیامک و تماس بی‌پاسخ، سریع و مقرون‌به‌صرفه. مناسب برای ثبت‌نام، ورود و تایید هویت کاربران." />
-  <title>OTP سیگنال - سرویس ارسال کد تأیید</title>
-  <link rel="icon" type="image/png" href="assets/images/favicon.png" />
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-</head>
-
-<body>
-  <a class="skip-link" href="#main">پرش به محتوا</a>
-  <nav class="main-header">
-    <div class="header-container">
-      <a href="#" class="logo">
-        <img src="assets/images/favicon.png" alt="OTP سیگنال" />
-        <span>OTP سیگنال</span>
-      </a>
-      <ul class="nav-menu">
-        <li><a href="#features">ویژگی‌ها</a></li>
-        <li><a href="#calculator">محاسبه</a></li>
-        <li><a href="#how-it-works">نحوه کار</a></li>
-        <li><a href="#cta">شروع رایگان</a></li>
-      </ul>
-      <div class="header-actions">
-        <a href="./test.html" class="btn btn-ghost">تست آنلاین</a>
-        <a href="https://panel.signalads.com/core/auth/signup" class="btn btn-primary">شروع رایگان</a>
-        <button class="hamburger" aria-label="منوی موبایل" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </div>
-  </nav>
-
-  <div class="mobile-menu">
-    <a href="#features">ویژگی‌ها</a>
-    <a href="#calculator">محاسبه</a>
-    <a href="#how-it-works">نحوه کار</a>
-    <a href="#cta">شروع رایگان</a>
-    <a href="https://panel.signalads.com/core/auth/signup" class="highlight">شروع رایگان</a>
-    <a href="./test.html" class="highlight">تست آنلاین</a>
-  </div>
-
-  <main id="main">
-    <section class="hero" id="hero">
-      <div class="hero-bg"></div>
-      <div class="container">
-        <div class="hero-content" data-aos="fade-left" data-aos-duration="1100">
-          <div class="hero-badge">
-            <span class="badge-dot"></span>
-            <span>سرویس OTP سیگنال</span>
-          </div>
-          <h1 class="hero-title">
-            ارسال <span class="highlight">OTP</span>
-            <br />با بالاترین سرعت
-          </h1>
-          <p class="hero-description">
-            سرویس پیامک و تماس بی‌پاسخ برای تأیید هویت با
-            <span class="accent">هزینه ۵۰٪ کمتر</span>
-          </p>
-          <div class="hero-buttons">
-            <a href="https://panel.signalads.com/core/auth/signup" class="btn btn-primary btn-lg">شروع رایگان</a>
-            <a href="./test.html" class="btn btn-outline btn-lg">تست آنلاین</a>
-            <a href="https://transmitor.signalads.com/docs" class="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">وب‌سرویس</a>
-          </div>
-          <div class="hero-stats">
-
-            <div class="stat">
-              <span class="stat-value">۵ ثانیه</span>
-              <span class="stat-label">زمان ارسال</span>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat">
-              <span class="stat-value">50%</span>
-              <span class="stat-label">صرفه‌جویی</span>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat">
-              <span class="stat-value">ارسال تضمینی</span>
-              <span class="stat-label">۲ روش ارسال</span>
-            </div>
-          </div>
-        </div>
-        <div class="hero-visual" data-aos="zoom-in" data-aos-duration="1200" data-aos-delay="120">
-          <div class="phone-mockup">
-            <div class="phone-screen">
-              <div class="app-notification">
-                <div class="notif-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  </svg>
-                </div>
-                <div class="notif-content">
-                  <span class="notif-title">کد تأیید</span>
-                  <span class="notif-code">482913</span>
-                  <span class="notif-time">اعتبار: 02:48</span>
-                </div>
-              </div>
-              <div class="api-demo">
-                <div class="code-line"><span class="code-keyword">POST</span> /otp/send</div>
-                <div class="code-line"><span class="code-string">"mobile": "0912..."</span></div>
-                <div class="code-line"><span class="code-string">"pattern_id": 950</span></div>
-                <div class="code-result"><span class="success">✓</span> OTP sent in <span class="time">10s</span></div>
-              </div>
-            </div>
-          </div>
-          <div class="floating-badge badge-1">🛡️ 95% Delivery</div>
-          <div class="floating-badge badge-2">⚡ &lt;5s Response</div>
-          <div class="floating-badge badge-3">💰 50% Cheaper</div>
-        </div>
-      </div>
-    </section>
-
-
-
-
-    <section class="features" id="features">
-      <div class="container">
-        <div class="section-header" data-aos="fade-up">
-          <span class="section-badge"><span class="badge-dot"></span>ویژگی‌های برجسته</span>
-          <h2 class="section-title">همه آنچه برای OTP <span class="gradient">نیاز دارید</span></h2>
-          <p class="section-subtitle">تجربه‌ای متفاوت از ارسال کد تأیید</p>
-        </div>
-        <div class="features-grid">
-          <div class="feature-card featured" data-aos="fade-up" data-aos-delay="0">
-            <div class="feature-ribbon">محبوب‌ترین</div>
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-              </svg>
-            </div>
-            <h3>ارسال زیر ۵ ثانیه</h3>
-            <p>سریع‌ترین سرویس OTP ایران. کد تأیید در کمتر از ۵ ثانیه به دست کاربر می‌رسد.</p>
-            <div class="feature-stats">
-              <div><span class="value">4.2s</span><span class="label">میانگین زمان</span></div>
-              <div><span class="value">96%</span><span class="label">موفقیت</span></div>
-            </div>
-          </div>
-          <div class="feature-card" data-aos="fade-up" data-aos-delay="90">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                <polyline points="22 4 12 14.01 9 11.01" />
-              </svg>
-            </div>
-            <h3>نرخ تحویل تضمینی</h3>
-            <p>ترکیب هوشمند پیامک و تماس بی‌پاسخ برای تضمین رسیدن کد</p>
-            <div class="feature-pills"><span>پیامک</span><span>تماس</span><span>Retry</span></div>
-          </div>
-          <div class="feature-card" data-aos="fade-up" data-aos-delay="150">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="1" x2="12" y2="23" />
-                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-              </svg>
-            </div>
-            <h3>۵۰٪ صرفه‌جویی</h3>
-            <p>هزینه‌های خود را تا نیم کاهش دهید. بدون هزینه پنهان</p>
-            <div class="savings-badge"><span class="value">50%</span><span class="label">کمتر</span></div>
-          </div>
-
-          <div class="feature-card" data-aos="fade-up" data-aos-delay="210">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="16 18 22 12 16 6" />
-                <polyline points="8 6 2 12 8 18" />
-              </svg>
-            </div>
-            <h3>یکپارچگی در ۳ خط کد</h3>
-            <p>مستندات کامل + SDK برای تمام زبان‌ها + پشتیبانی ۲۴/۷</p>
-            <div class="lang-tags"><span>Python</span><span>Node.js</span><span>PHP</span></div>
-          </div>
-          <div class="feature-card " data-aos="fade-up" data-aos-delay="270">
-            <div class="feature-content">
-              <div class="feature-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="3" width="8" height="8" rx="1" />
-                  <rect x="13" y="3" width="8" height="8" rx="1" />
-                  <rect x="3" y="13" width="8" height="8" rx="1" />
-                  <rect x="13" y="13" width="8" height="8" rx="1" />
-                </svg>
-              </div>
-              <div>
-                <h3>کد ۴ تا ۶ رقمی قابل تنظیم</h3>
-                <p>انعطاف‌پذیری کامل در طول کد. متناسب با نیاز امنیتی شما</p>
-              </div>
-            </div>
-            <div class="length-selector">
-              <button class="active">۴ رقم</button>
-              <button>۵ رقم</button>
-              <button>۶ رقم</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="calculator" id="calculator">
-      <div class="container">
-        <div class="section-header" data-aos="fade-up">
-          <span class="section-badge"><span class="badge-dot"></span>محاسبه آنلاین</span>
-          <h2 class="section-title">چقدر <span class="gradient">صرفه‌جویی</span> می‌کنید؟</h2>
-        </div>
-        <div class="calculator-card" data-aos="zoom-in-up" data-aos-duration="1000">
-          <div class="calc-inputs">
-            <div class="input-group">
-              <label>تعداد OTP ماهانه</label>
-              <div class="range-container">
-                <div class="range-labels">
-                  <span>هزار</span>
-                  <span>میلیون</span>
-                </div>
-                <input type="range" id="otpCount" min="1000" max="1000000" value="100000" step="1000">
-                <div class="range-value"><span id="otpValue">100,000</span> OTP/ماه</div>
-              </div>
-            </div>
-	            <div class="input-group">
-	              <label>قیمت هر پیامک (تومان)</label>
-	              <div class="range-container">
-	                <div class="range-labels">
-	                  <span id="smsMinLabel">۱۴۰</span>
-	                  <span id="smsMaxLabel">۳۰۰</span>
-	                </div>
-	                <input type="range" id="smsPrice" min="140" max="300" value="180" step="10">
-	                <div class="range-value"><span id="priceValue">180</span> تومان</div>
-	              </div>
-	            </div>
-	          </div>
-	          <div class="calc-info">
-	            <span class="info-badge">💡 هزینه هر OTP با میسکال <strong id="missedCallUnitPrice">۷۳</strong> تومان است</span>
-	          </div>
-          <div class="calc-visual">
-            <div class="visual-bar">
-              <div class="bar-label">هزینه فعلی (پیامک)</div>
-              <div class="bar-track">
-                <div class="bar-fill current" id="currentBar"></div>
-              </div>
-              <div class="bar-value"><span id="currentCost">18,000,000</span> تومان</div>
-            </div>
-            <div class="visual-bar">
-              <div class="bar-label">هزینه سیگنال (میسکال)</div>
-              <div class="bar-track">
-                <div class="bar-fill signal" id="signalBar"></div>
-              </div>
-              <div class="bar-value"><span id="signalCost">9,000,000</span> تومان</div>
-            </div>
-          </div>
-	          <div class="savings-box">
-	            <div class="savings-icon">🎉</div>
-	            <div class="savings-content">
-	              <span class="savings-label">صرفه‌جویی ماهانه</span>
-	              <span class="savings-value" id="monthlySavings">9,000,000</span>
-	              <span class="unit">تومان</span>
-	            </div>
-	            <div class="savings-badge" id="savingsPercentBadge">۵۰٪ صرفه‌جویی</div>
-	          </div>
-          <div class="calc-yearly">
-            <div class="yearly-content">
-              <span class="yearly-icon">📅</span>
-              <span>سالانه <strong id="yearlySavings">108,000,000</strong> تومان پس‌انداز</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="how-it-works" id="how-it-works">
-      <div class="container">
-        <div class="section-header" data-aos="fade-up">
-          <span class="section-badge"><span class="badge-dot"></span>شروع سریع</span>
-          <h2 class="section-title">در ۴ مرحله ساده <span class="gradient">شروع کنید</span></h2>
-        </div>
-        <div class="steps">
-          <div class="step" data-aos="fade-up" data-aos-delay="0">
-            <div class="step-marker">۱<span class="pulse"></span></div>
-            <h3>ثبت‌نام</h3>
-            <p>در وب‌سایت سیگنال عضو شوید و دسترسی وب‌سرویس را فعال کنید</p>
-          </div>
-          <div class="step" data-aos="fade-up" data-aos-delay="100">
-            <div class="step-marker">۲<span class="pulse"></span></div>
-            <h3>دریافت API Key</h3>
-            <p>از بخش وب‌سرویس پنل، توکن اختصاصی <code>API_KEY</code> را دریافت کنید.</p>
-          </div>
-          <div class="step" data-aos="fade-up" data-aos-delay="180">
-            <div class="step-marker">۳<span class="pulse"></span></div>
-            <h3>ساخت الگو</h3>
-            <p>یک الگو با متغیر <code>otp</code> بسازید و <code>pattern_id</code> آن را بردارید.</p>
-          </div>
-          <div class="step" data-aos="fade-up" data-aos-delay="260">
-            <div class="step-marker">۴<span class="pulse"></span></div>
-            <h3>ارسال OTP</h3>
-            <p>با <code>POST /otp/send</code> کد را بفرستید و <code>uuid</code> خروجی را برای verify نگه دارید.</p>
-          </div>
-        </div>
-        <div class="code-demo" data-aos="fade-up" data-aos-delay="120">
-<div class="code-header">
-            <div class="code-tabs"></div>
-            <button class="copy-btn" aria-label="کپی کد نمونه">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-              <span class="copy-label">کپی</span>
-            </button>
-          </div>
-          <div class="code-content">
-            <pre class="active" id="code-curl">curl -X POST 'https://transmitor.signalads.com/api_v1/otp/send' \
-  -H 'Authorization: Bearer YOUR_TOKEN' \
-  -H 'Content-Type: application/json' \
-  -d '{"mobile": "09123456789", "pattern_id": "PATTERN_ID"}'
-
-# Response:
-# { "uuid": "UUID" }
-
-curl -X POST 'https://transmitor.signalads.com/api_v1/otp/verify' \
-  -H 'Authorization: Bearer YOUR_TOKEN' \
-  -H 'Content-Type: application/json' \
-  -d '{"uuid":"UUID","code":"123456"}'
-
-# اگر مقدار verified = true باشد، کاربر با موفقیت تأیید شده است.</pre>
-          </div>
-        </div>
-        <div class="integration-note" data-aos="fade-up" data-aos-delay="180">
-          <h3>نکات اتصال</h3>
-          <ul>
-            <li>هدر احراز هویت باید به‌صورت <code>Authorization: Bearer TOKEN</code> ارسال شود.</li>
-            <li>شناسه <code>uuid</code> دریافتی از ارسال، برای <code>retry</code> و <code>verify</code> استفاده می‌شود.</li>
-            <li>زمان اعتبار هر OTP برابر با ۱ دقیقه است.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-   
-
-
-    <section class="cta" id="cta">
-      <div class="container">
-        <div class="cta-card" data-aos="zoom-in" data-aos-duration="950">
-          <h2>آماده شروع هستید؟</h2>
-          <p>همین حالا ثبت‌نام کنید و ۱۰۰ پیامک رایگان دریافت کنید</p>
-          <div class="cta-features">
-            <span>✓ ۱ دقیقه ثبت‌نام</span>
-            <span>تحویل تضمینی</span>
-          </div>
-          <a href="https://panel.signalads.com/core/auth/signup" class="btn btn-primary btn-lg">شروع رایگان</a>
-          
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="main-footer">
-    <div class="container">
-      <div class="footer-main" data-aos="fade-up">
-        <div class="footer-brand">
-          <a href="#" class="footer-logo">
-            <img src="assets/images/favicon.png" alt="OTP سیگنال" />
-            <span>OTP سیگنال</span>
-          </a>
-          <p>قدرت‌مندترین سرویس ارسال OTP در ایران با بیش از یک دهه تجربه</p>
-          
-        </div>
-        <div class="footer-links">
-          <div class="col">
-            <h4>محصول</h4><a href="#features">ویژگی‌ها</a><a href="#how-it-works">نحوه کار</a><a href="./test.html">تست
-              رایگان</a>
-          </div>
-          <div class="col">
-            <h4>توسعه‌دهندگان</h4><a href="https://transmitor.signalads.com/docs">مستندات API</a><a href="#">نمونه
-              کد</a>
-          </div>
-          <div class="col">
-            <h4>شرکت</h4><a href="#">درباره ما</a><a href="#">تماس</a>
-          </div>
-          <div class="col">
-            <h4>تماس</h4><a href="tel:02191058110">۰۲۱-۹۱۰۵-۸۱۱۰</a><a
-              href="mailto:info@signalads.com">info@signalads.com</a>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom" data-aos="fade-up" data-aos-delay="120">
-        <p><span id="footerYear">۱۴۰۴</span> © تمامی حقوق متعلق به <a href="https://signalads.com">شرکت سیگنال</a></p>
-        <button class="scroll-top">↑</button>
-      </div>
-    </div>
-  </footer>
-
-	  <script src="/runtime-config.js"></script>
-	  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-	  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-	  <script>
-	    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (window.AOS && !reduceMotion) {
-      AOS.init({
-        duration: 920,
-        once: true,
-        offset: 72,
-        delay: 40,
-        easing: 'cubic-bezier(0.22, 1, 0.36, 1)'
-      });
-    }
-
-    const hamburgerBtn = document.querySelector('.hamburger');
-    const mobileMenu = document.querySelector('.mobile-menu');
-    if (hamburgerBtn && mobileMenu) {
-      hamburgerBtn.addEventListener('click', () => {
-        const isOpen = mobileMenu.classList.toggle('active');
-        hamburgerBtn.setAttribute('aria-expanded', String(isOpen));
-        document.body.classList.toggle('menu-open', isOpen);
-      });
-
-      mobileMenu.querySelectorAll('a').forEach((link) => {
-        link.addEventListener('click', () => {
-          mobileMenu.classList.remove('active');
-          hamburgerBtn.setAttribute('aria-expanded', 'false');
-          document.body.classList.remove('menu-open');
-        });
-      });
-
-      window.addEventListener('resize', () => {
-        if (window.innerWidth > 768 && mobileMenu.classList.contains('active')) {
-          mobileMenu.classList.remove('active');
-          hamburgerBtn.setAttribute('aria-expanded', 'false');
-          document.body.classList.remove('menu-open');
-        }
-      });
-    }
-
-    if (window.Swiper && document.querySelector('.logos-slider')) {
-      new Swiper('.logos-slider', { slidesPerView: 2, spaceBetween: 40, loop: true, autoplay: reduceMotion ? false : { delay: 3000 }, breakpoints: { 480: { slidesPerView: 3 }, 768: { slidesPerView: 4 }, 1024: { slidesPerView: 6 } } });
-    }
-
-    if (window.Swiper && document.querySelector('.testimonials-slider')) {
-      new Swiper('.testimonials-slider', { slidesPerView: 1, spaceBetween: 30, loop: true, pagination: { el: '.swiper-pagination', clickable: true }, breakpoints: { 768: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } } });
-    }
-
-    const copyBtn = document.querySelector('.copy-btn');
-    const codeBlock = document.getElementById('code-curl');
-    const copyLabel = document.querySelector('.copy-label');
-    if (copyBtn && copyLabel && codeBlock && navigator.clipboard) {
-      copyBtn.addEventListener('click', async () => {
-        try {
-          await navigator.clipboard.writeText(codeBlock.textContent.trim());
-          copyBtn.classList.add('copied');
-          const original = copyLabel.textContent;
-          copyLabel.textContent = 'کپی شد';
-          setTimeout(() => {
-            copyBtn.classList.remove('copied');
-            copyLabel.textContent = original;
-          }, 1400);
-        } catch (e) {
-          console.warn('Clipboard copy failed', e);
-        }
-      });
-    }
-
-	    const calcCfg = window.__OTP_CALC_CONFIG__ || {};
-	    const finiteOr = (value, fallback) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
-	    const missedCallUnitPrice = finiteOr(calcCfg.missedCallUnitPrice, 73);
-	    const smsMin = finiteOr(calcCfg.smsUnitPriceMin, 140);
-	    const smsMax = finiteOr(calcCfg.smsUnitPriceMax, 300);
-	    const smsStep = finiteOr(calcCfg.smsUnitPriceStep, 10);
-	    const smsDefault = finiteOr(calcCfg.smsUnitPriceDefault, Math.min(Math.max(180, smsMin), smsMax));
-
-	    const otpSlider = document.getElementById('otpCount'), smsSlider = document.getElementById('smsPrice');
-	    const smsMinLabel = document.getElementById('smsMinLabel');
-	    const smsMaxLabel = document.getElementById('smsMaxLabel');
-	    const missedCallUnitPriceEl = document.getElementById('missedCallUnitPrice');
-	    const calc = () => {
-	      const otps = parseInt(otpSlider.value), smsPrice = parseInt(smsSlider.value);
-	      document.getElementById('otpValue').textContent = otps.toLocaleString('fa-IR');
-	      document.getElementById('priceValue').textContent = smsPrice;
-	      const current = otps * smsPrice;
-	      const signal = otps * missedCallUnitPrice;
-	      const savings = current - signal;
-	      const savingsPercent = current > 0 ? Math.round((Math.max(0, savings) / current) * 100) : 0;
-	      document.getElementById('currentCost').textContent = current.toLocaleString('fa-IR');
-	      document.getElementById('signalCost').textContent = signal.toLocaleString('fa-IR');
-	      document.getElementById('monthlySavings').textContent = savings.toLocaleString('fa-IR');
-	      document.getElementById('yearlySavings').textContent = (savings * 12).toLocaleString('fa-IR');
-	      const savingsBadge = document.getElementById('savingsPercentBadge');
-	      if (savingsBadge) savingsBadge.textContent = `${savingsPercent.toLocaleString('fa-IR')}٪ صرفه‌جویی`;
-	      document.getElementById('currentBar').style.width = '100%';
-	      const signalRatio = current > 0 ? Math.min(1, Math.max(0, signal / current)) : 0;
-	      document.getElementById('signalBar').style.width = `${(signalRatio * 100).toFixed(2)}%`;
-	    };
-	    if (otpSlider && smsSlider) {
-	      // Apply runtime env-configured bounds/defaults for SMS price slider.
-	      smsSlider.min = String(smsMin);
-	      smsSlider.max = String(smsMax);
-	      smsSlider.step = String(smsStep);
-	      const initialSms = parseInt(smsSlider.value);
-	      if (!Number.isFinite(initialSms) || initialSms < smsMin) {
-	        smsSlider.value = String(smsDefault);
-	      }
-	      if (smsMinLabel) smsMinLabel.textContent = smsMin.toLocaleString('fa-IR');
-	      if (smsMaxLabel) smsMaxLabel.textContent = smsMax.toLocaleString('fa-IR');
-	      if (missedCallUnitPriceEl) missedCallUnitPriceEl.textContent = missedCallUnitPrice.toLocaleString('fa-IR');
-
-	      otpSlider.addEventListener('input', calc);
-	      smsSlider.addEventListener('input', calc);
-	      calc();
-	    }
-
-    const footerYear = document.getElementById('footerYear');
-    if (footerYear && window.Intl) {
-      try {
-        footerYear.textContent = new Intl.DateTimeFormat('fa-IR-u-ca-persian', { year: 'numeric' }).format(new Date());
-      } catch {
-        // keep fallback
-      }
-    }
-
-    const scrollTopBtn = document.querySelector('.scroll-top');
-    const mainHeader = document.querySelector('.main-header');
-    if (scrollTopBtn) {
-      scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }));
-    }
-
-    window.addEventListener('scroll', () => {
-      if (scrollTopBtn) {
-        scrollTopBtn.classList.toggle('visible', window.pageYOffset > 500);
-      }
-      if (mainHeader) {
-        mainHeader.classList.toggle('scrolled', window.pageYOffset > 50);
-      }
-    });
-  </script>
-</body>
-
-</html>
